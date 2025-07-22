@@ -1,41 +1,57 @@
 import streamlit as st
+from personas import devops_interface
 
 # Persona options
 personas = ['DevOps Engineer', 'Data Scientist', 'Product Manager']
 
-# Second step options
-actions = ['Learn', 'Resolve a query', 'Have it done for me with AI']
-
 def main():
-    # Page 1: Choose persona
+    # App title
     st.title("Persona Selector")
-    st.write("I am a", end=" ")
 
-    # Keep persona in session state
-    if 'persona' not in st.session_state:
+    if "step" not in st.session_state:
+        st.session_state.step = 1
+    if "persona" not in st.session_state:
         st.session_state.persona = None
-    if 'action' not in st.session_state:
+    if "action" not in st.session_state:
         st.session_state.action = None
 
-    persona = st.selectbox("Select your persona:", personas, 
-        key='persona', label_visibility='collapsed')
+    # Step 1: Persona selection
+    if st.session_state.step == 1:
+        st.write("I am a", end=" ")
+        persona = st.selectbox(
+            "Select your persona:",
+            personas,
+            key="persona_select",
+            label_visibility="collapsed"
+        )
+        if st.button("Continue »"):
+            st.session_state.persona = persona
+            st.session_state.step = 2
 
-    # Continue button
-    if st.button("Continue »", key="continue_1"):
-        st.session_state.persona = persona
+    # Step 2: Persona-specific screen
+    if st.session_state.step == 2:
+        # Call the appropriate persona module
+        if st.session_state.persona == "DevOps Engineer":
+            selected_action = devops_interface()
+        else:
+            st.write(f"I want to", end=" ")
+            selected_action = st.selectbox(
+                "",
+                ["Learn", "Resolve a Query", "Have it done for me with AI"],
+                key="generic_action",
+                label_visibility="collapsed"
+            )
+        if st.button("Continue »", key="action_continue"):
+            st.session_state.action = selected_action
+            st.session_state.step = 3
 
-    # If persona selected, show the second page
-    if st.session_state.persona:
-        st.write(f"### You are a: {st.session_state.persona}")
-        st.write("I want to", end=" ")
-        action = st.selectbox("Select your action:", actions, key='action', label_visibility='collapsed')
-        if st.button("Go »", key="continue_2"):
-            st.session_state.action = action
-
-    # If action selected, show final result
-    if st.session_state.action:
+    # Step 3: Show summary (optional)
+    if st.session_state.step == 3:
         st.success(f"Persona: **{st.session_state.persona}**\n\nAction: **{st.session_state.action}**")
-        # You can render the specific interface for the persona and action here
+        if st.button("Start Over"):
+            st.session_state.step = 1
+            st.session_state.persona = None
+            st.session_state.action = None
 
 if __name__ == "__main__":
     main()
