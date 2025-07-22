@@ -6,7 +6,7 @@ personas = ['DevOps Engineer', 'Data Scientist', 'Product Manager']
 
 def main():
     # App title
-    st.title("Persona Selector")
+    #st.title("Persona Selector")
 
     if "step" not in st.session_state:
         st.session_state.step = 1
