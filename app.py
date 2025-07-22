@@ -1,7 +1,6 @@
 import streamlit as st
 from personas import devops_interface
 
-# Persona options
 personas = ['DevOps Engineer', 'Data Scientist', 'Product Manager']
 
 def main():
@@ -9,8 +8,10 @@ def main():
         st.session_state.step = 1
     if "persona" not in st.session_state:
         st.session_state.persona = None
+    if "action" not in st.session_state:
+        st.session_state.action = None
 
-    # Page 1: Centered big "I am a _" with big dropdown inline
+    # PAGE 1: Persona selection
     if st.session_state.step == 1:
         st.markdown(
             """
@@ -28,20 +29,17 @@ def main():
             "",
             personas,
             key="persona_select",
-            label_visibility="collapsed",
-            # For wider dropdown:
-            help="Choose your persona to proceed."
+            label_visibility="collapsed"
         )
         st.markdown("</div></div>", unsafe_allow_html=True)
-        # Center the Continue button
         col1, col2, col3 = st.columns([4, 2, 4])
         with col2:
-            if st.button("Continue »", use_container_width=True):
+            if st.button("Continue »", use_container_width=True, key="continue1"):
                 st.session_state.persona = persona
                 st.session_state.step = 2
 
-    # Page 2: Persona-specific action screen
-    if st.session_state.step == 2:
+    # PAGE 2: Action selection (only shown after clicking Continue above)
+    elif st.session_state.step == 2:
         if st.session_state.persona == "DevOps Engineer":
             selected_action = devops_interface()
         else:
@@ -69,8 +67,8 @@ def main():
                 st.session_state.action = selected_action
                 st.session_state.step = 3
 
-    # Optional: Summary page
-    if st.session_state.step == 3:
+    # PAGE 3: Optional summary/final step
+    elif st.session_state.step == 3:
         st.markdown("<div style='height:15vh;'></div>", unsafe_allow_html=True)
         st.markdown(
             f"<h3 style='text-align:center;'>Persona: <b>{st.session_state.persona}</b></h3>",
