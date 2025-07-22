@@ -5,53 +5,87 @@ from personas import devops_interface
 personas = ['DevOps Engineer', 'Data Scientist', 'Product Manager']
 
 def main():
-    # App title
-    #st.title("Persona Selector")
-
     if "step" not in st.session_state:
         st.session_state.step = 1
     if "persona" not in st.session_state:
         st.session_state.persona = None
-    if "action" not in st.session_state:
-        st.session_state.action = None
 
-    # Step 1: Persona selection
+    # Page 1: Centered big "I am a _" with big dropdown inline
     if st.session_state.step == 1:
-        st.write("I am a", end=" ")
+        st.markdown(
+            """
+            <div style="height:20vh;"></div>
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <span style="font-size:400%; font-weight: bold; margin-right: 20px;">
+                    I am a
+                </span>
+                <div>
+            """,
+            unsafe_allow_html=True,
+        )
+
         persona = st.selectbox(
-            "Select your persona:",
+            "",
             personas,
             key="persona_select",
-            label_visibility="collapsed"
+            label_visibility="collapsed",
+            # For wider dropdown:
+            help="Choose your persona to proceed."
         )
-        if st.button("Continue »"):
-            st.session_state.persona = persona
-            st.session_state.step = 2
+        st.markdown("</div></div>", unsafe_allow_html=True)
+        # Center the Continue button
+        col1, col2, col3 = st.columns([4, 2, 4])
+        with col2:
+            if st.button("Continue »", use_container_width=True):
+                st.session_state.persona = persona
+                st.session_state.step = 2
 
-    # Step 2: Persona-specific screen
+    # Page 2: Persona-specific action screen
     if st.session_state.step == 2:
-        # Call the appropriate persona module
         if st.session_state.persona == "DevOps Engineer":
             selected_action = devops_interface()
         else:
-            st.write(f"I want to", end=" ")
+            st.markdown(
+                """
+                <div style="height:28vh;"></div>
+                <div style="display: flex; justify-content: center; align-items: center;">
+                    <span style="font-size:250%; font-weight: bold; margin-right: 18px;">
+                        I want to
+                    </span>
+                <div>
+                """,
+                unsafe_allow_html=True
+            )
             selected_action = st.selectbox(
                 "",
                 ["Learn", "Resolve a Query", "Have it done for me with AI"],
                 key="generic_action",
                 label_visibility="collapsed"
             )
-        if st.button("Continue »", key="action_continue"):
-            st.session_state.action = selected_action
-            st.session_state.step = 3
+            st.markdown("</div></div>", unsafe_allow_html=True)
+        col1, col2, col3 = st.columns([4, 2, 4])
+        with col2:
+            if st.button("Continue »", use_container_width=True, key="action_continue"):
+                st.session_state.action = selected_action
+                st.session_state.step = 3
 
-    # Step 3: Show summary (optional)
+    # Optional: Summary page
     if st.session_state.step == 3:
-        st.success(f"Persona: **{st.session_state.persona}**\n\nAction: **{st.session_state.action}**")
-        if st.button("Start Over"):
-            st.session_state.step = 1
-            st.session_state.persona = None
-            st.session_state.action = None
+        st.markdown("<div style='height:15vh;'></div>", unsafe_allow_html=True)
+        st.markdown(
+            f"<h3 style='text-align:center;'>Persona: <b>{st.session_state.persona}</b></h3>",
+            unsafe_allow_html=True
+        )
+        st.markdown(
+            f"<h3 style='text-align:center;'>Action: <b>{st.session_state.action}</b></h3>",
+            unsafe_allow_html=True
+        )
+        col1, col2, col3 = st.columns([4, 2, 4])
+        with col2:
+            if st.button("Start Over", use_container_width=True):
+                st.session_state.step = 1
+                st.session_state.persona = None
+                st.session_state.action = None
 
 if __name__ == "__main__":
     main()
