@@ -37,16 +37,14 @@ def main():
                 st.session_state.persona = persona
                 st.session_state.step = 2
 
-    # PAGE 2: Action selection
+    # PAGE 2: Action selection—"I want to" big and centered, dropdown directly below
     elif st.session_state.step == 2:
         st.markdown(
             """
             <div style="height:20vh;"></div>
-            <div style="display: flex; justify-content: center; align-items: center;">
-                <span style="font-size:400%; font-weight: bold; margin-right: 20px;">
-                    I want to
-                </span>
-                <div>
+            <div style="display: flex; flex-direction: column; align-items: center;">
+                <span style="font-size:400%; font-weight: bold;">I want to</span>
+            </div>
             """,
             unsafe_allow_html=True,
         )
@@ -59,7 +57,6 @@ def main():
                 key="generic_action",
                 label_visibility="collapsed"
             )
-        st.markdown("</div></div>", unsafe_allow_html=True)
         col1, col2, col3 = st.columns([4, 2, 4])
         with col2:
             if st.button("Continue »", use_container_width=True, key="action_continue"):
