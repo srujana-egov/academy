@@ -24,7 +24,6 @@ def main():
             """,
             unsafe_allow_html=True,
         )
-
         persona = st.selectbox(
             "",
             personas,
@@ -38,29 +37,29 @@ def main():
                 st.session_state.persona = persona
                 st.session_state.step = 2
 
-    # PAGE 2: Action selection (only shown after clicking Continue above)
+    # PAGE 2: Action selection
     elif st.session_state.step == 2:
+        st.markdown(
+            """
+            <div style="height:20vh;"></div>
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <span style="font-size:400%; font-weight: bold; margin-right: 20px;">
+                    I want to
+                </span>
+                <div>
+            """,
+            unsafe_allow_html=True,
+        )
         if st.session_state.persona == "DevOps Engineer":
             selected_action = devops_interface()
         else:
-            st.markdown(
-                """
-                <div style="height:28vh;"></div>
-                <div style="display: flex; justify-content: center; align-items: center;">
-                    <span style="font-size:250%; font-weight: bold; margin-right: 18px;">
-                        I want to
-                    </span>
-                <div>
-                """,
-                unsafe_allow_html=True
-            )
             selected_action = st.selectbox(
                 "",
                 ["Learn", "Resolve a Query", "Have it done for me with AI"],
                 key="generic_action",
                 label_visibility="collapsed"
             )
-            st.markdown("</div></div>", unsafe_allow_html=True)
+        st.markdown("</div></div>", unsafe_allow_html=True)
         col1, col2, col3 = st.columns([4, 2, 4])
         with col2:
             if st.button("Continue »", use_container_width=True, key="action_continue"):
